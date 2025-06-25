@@ -1,43 +1,50 @@
-Identifier: eos0aaa
-Slug: template-model
+Identifier: eos1j4h
+Slug: morgan-fingerprint-embedding
 Status: In progress
-Title: This is a template model
-Description: |
-  This is a description of the template model.
-  You can use multiple lines in this description.
+Title: Morgan Fingerprint Embedding
+Description: An embedding model created using PyTorch Metric Learning. Creates 100
+  dimensional embeddings from 2048 dimensional Morgan Count Fingerprints. Trained
+  on Cosine Similarity using a ChEMBL reference library of 2 Million Compounds. Particularly
+  useful in approximating the properties of high-dimensional and sparse count fingerprints
+  to dense 100 dimensional embeddings for creating similarity search indices from
+  large compound datasets. Ideally this should perform well not just for similarity
+  search models but also prediction, classification etc.
 Deployment:
-  - Local
-  - Online
+- Local
+- Online
 Source: Local, Online
 Source Type: Internal, Replicated, External
 Task: Annotation, Representation, Sampling
-Subtask: Property calculation or prediction, Activity prediction, Featurization, Projection, Similarity search, Generation
-Input: 
-  - Compound
+Subtask: Property calculation or prediction, Activity prediction, Featurization, Projection,
+  Similarity search, Generation
+Input:
+- Compound
 Input Dimension: 1
-Output: 
-  - Value
-  - Score
-  - Compound
-  - Probability
-  - Experimental value
-  - ...
+Output:
+- Value
+- Score
+- Compound
+- Probability
+- Experimental value
+- '...'
 Output Dimension: 1
 Output Consistency: Fixed, Variable
-Interpretation: |
-  The output of this template model should be interpreted like this.
+Interpretation: 'The output of this template model should be interpreted like this.
+
+  '
 Tag:
-  - Tag 1
-  - Tag 2
-  - Tag 3
+- Fingerprint
+- ChEMBL
+- Descriptor
+- Embedding
 Biomedical Area:
-  - Biomedical Area 1
-  - Biomedical Area 2
+- Biomedical Area 1
+- Biomedical Area 2
 Target Organism:
-  - Target Organism 1
-  - Target Organism 2
+- Target Organism 1
+- Target Organism 2
 Publication Type: Peer reviewed, Preprint, Other
 Publication Year: 2025
-Publication: https://example.com
-Source Code: https://example.com
-License: GPL-3.0-or-later, MIT, Apache-2.0...
+Publication: https://arxiv.org/abs/2008.09164
+Source Code: https://github.com/kevinmusgrave/pytorch-metric-learning
+License: MIT
