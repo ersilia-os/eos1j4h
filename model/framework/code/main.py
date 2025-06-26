@@ -56,7 +56,7 @@ def featurize_smiles(smiles_list, radius=3, nbits=2048):
 def embed_smiles(smiles_list, model, device='cpu', batch_size=128):
     """
     Generate embeddings for a list of SMILES.
-    Returns a NumPy array of shape (N, embedding_dim) where N is the number of SMILES inputted
+    Returns a NumPy array of shape (N, embedding_dim)
     """
     fps = featurize_smiles(smiles_list)
     embeddings = []
@@ -75,9 +75,9 @@ def main():
         description="Generate molecular embeddings from SMILES using a saved model."
     )
     parser.add_argument(
-    "--model",
-    default=os.path.join(root, "..", "..", "checkpoints", "embedding_model.pth"),
-    help="Path to the saved PyTorch embedding_model.pth (Defaults to ../../checkpoints/embedding_model.pth)"
+        "--model",
+        default=os.path.join(root, "..", "..", "checkpoints", "embedding_model.pth"),
+        help="Path to the saved PyTorch embedding_model.pth (Defaults to ../../checkpoints/embedding_model.pth)"
     )
     parser.add_argument(
         "--smiles", required=True,
@@ -88,8 +88,12 @@ def main():
         help="Path to save embeddings (NumPy .npy)"
     )
     parser.add_argument(
-        "--json", required=True,
-        help="Path to save embeddings as JSON"
+        "--csv", required=True,
+        help="Path to save embeddings as CSV"
+    )
+    parser.add_argument(
+        "--json", required=False,
+        help="Optional path to save embeddings as JSON"
     )
     parser.add_argument(
         "--device", default="cpu",
@@ -115,15 +119,26 @@ def main():
     np.save(args.output, embeddings)
     print(f"Saved NumPy embeddings for {len(smiles_list)} molecules to {args.output}")
 
-    # Save JSON
-    embedding_json = [
-        {"SMILE": smile, "Embedding": embedding.tolist()} for smile, embedding in zip(smiles_list, embeddings)
-    ]
-    with open(args.json, 'w') as jf:
-        json.dump(embedding_json, jf, indent=2)
-    print(f"Saved JSON embeddings to {args.json}")
+    # Save CSV
+    embedding_df = pd.DataFrame(
+        embeddings,
+        columns=[f"E{i}" for i in range(embeddings.shape[1])]
+    )
+    embedding_df.insert(0, "SMILES", smiles_list)
+    os.makedirs(os.path.dirname(args.csv), exist_ok=True)
+    embedding_df.to_csv(args.csv, index=False)
+    print(f"Saved CSV embeddings to {args.csv}")
+
+    # Save JSON if requested
+    if args.json:
+        embedding_json = [
+            {"SMILE": smile, "Embedding": embedding.tolist()} for smile, embedding in zip(smiles_list, embeddings)
+        ]
+        os.makedirs(os.path.dirname(args.json), exist_ok=True)
+        with open(args.json, 'w') as jf:
+            json.dump(embedding_json, jf, indent=2)
+        print(f"Saved JSON embeddings to {args.json}")
 
 
 if __name__ == "__main__":
     main()
-

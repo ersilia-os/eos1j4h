@@ -13,38 +13,29 @@ Deployment:
 - Local
 - Online
 Source: Local, Online
-Source Type: Internal, Replicated, External
-Task: Annotation, Representation, Sampling
-Subtask: Property calculation or prediction, Activity prediction, Featurization, Projection,
-  Similarity search, Generation
+Source Type: Internal
+Task: Representation
+Subtask: Featurization, Projection
 Input:
 - Compound
 Input Dimension: 1
 Output:
-- Value
-- Score
-- Compound
-- Probability
-- Experimental value
-- '...'
-Output Dimension: 1
-Output Consistency: Fixed, Variable
-Interpretation: 'The output of this template model should be interpreted like this.
+- Embedding
+Output Dimension: 100
+Output Consistency: Fixed
+Interpretation: 'The output of this model are compounds represented as 100 dimensional embeddings generated from morgan count fingerprint. Similar compounds (cosine similarity) should be closer together in the embedding space whereas the distance between embeddings increases as the similarity of compounds decreases'
 
-  '
 Tag:
 - Fingerprint
 - ChEMBL
 - Descriptor
 - Embedding
 Biomedical Area:
-- Biomedical Area 1
-- Biomedical Area 2
+- Any
 Target Organism:
-- Target Organism 1
-- Target Organism 2
-Publication Type: Peer reviewed, Preprint, Other
-Publication Year: 2025
+- Not Applicable
+Publication Type: Preprint
+Publication Year: 2020
 Publication: https://arxiv.org/abs/2008.09164
 Source Code: https://github.com/kevinmusgrave/pytorch-metric-learning
 License: MIT
