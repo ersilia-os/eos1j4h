@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # Usage:
 # ./run.sh <input_smiles_csv> <output_npy> <output_csv> [output_json] 
