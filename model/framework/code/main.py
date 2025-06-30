@@ -1,5 +1,4 @@
 import os
-import json
 import argparse
 import numpy as np
 import pandas as pd
@@ -60,7 +59,6 @@ def embed_smiles(smiles_list, model, device='cpu', batch_size=128):
     """
     fps = featurize_smiles(smiles_list)
     embeddings = []
-    model.eval()
     with torch.no_grad():
         for start in range(0, len(fps), batch_size):
             batch = torch.from_numpy(fps[start:start+batch_size]).to(device)
@@ -84,16 +82,8 @@ def main():
         help="Path to a CSV file with a 'SMILES' column"
     )
     parser.add_argument(
-        "--output", required=True,
-        help="Path to save embeddings (NumPy .npy)"
-    )
-    parser.add_argument(
         "--csv", required=True,
         help="Path to save embeddings as CSV"
-    )
-    parser.add_argument(
-        "--json", required=False,
-        help="Optional path to save embeddings as JSON"
     )
     parser.add_argument(
         "--device", default="cpu",
@@ -114,30 +104,14 @@ def main():
     # Embed
     embeddings = embed_smiles(smiles_list, model, device=args.device)
 
-    # Save .npy
-    os.makedirs(os.path.dirname(args.output), exist_ok=True)
-    np.save(args.output, embeddings)
-    print(f"Saved NumPy embeddings for {len(smiles_list)} molecules to {args.output}")
-
-    # Save CSV
+    # Save CSV without SMILES column
     embedding_df = pd.DataFrame(
         embeddings,
-        columns=[f"E{i}" for i in range(embeddings.shape[1])]
+        columns=[f"dim_{i:02d}" for i in range(embeddings.shape[1])]
     )
-    embedding_df.insert(0, "SMILES", smiles_list)
     os.makedirs(os.path.dirname(args.csv), exist_ok=True)
     embedding_df.to_csv(args.csv, index=False)
-    print(f"Saved CSV embeddings to {args.csv}")
-
-    # Save JSON if requested
-    if args.json:
-        embedding_json = [
-            {"SMILE": smile, "Embedding": embedding.tolist()} for smile, embedding in zip(smiles_list, embeddings)
-        ]
-        os.makedirs(os.path.dirname(args.json), exist_ok=True)
-        with open(args.json, 'w') as jf:
-            json.dump(embedding_json, jf, indent=2)
-        print(f"Saved JSON embeddings to {args.json}")
+    print(f"Saved embeddings (CSV) to {args.csv}")
 
 
 if __name__ == "__main__":

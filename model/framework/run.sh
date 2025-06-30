@@ -1,26 +1,18 @@
+#!/bin/bash
 
 # Usage:
-# ./run.sh <input_smiles_csv> <output_npy> <output_csv> [output_json] 
-# output json is optional
+# ./run.sh <input_smiles_csv> <output_csv> [device]
+# device is optional, defaults to cpu
 
 set -e
 
 SMILES_PATH=$1
-OUTPUT_NPY=$2
-OUTPUT_CSV=$3
-OUTPUT_JSON=$4
+OUTPUT_CSV=$2
+DEVICE=${3:-cpu}  # default to cpu if not provided
 
 PYTHON_SCRIPT="./code/main.py"
 
-if [ -z "$OUTPUT_JSON" ]; then
-  python "$PYTHON_SCRIPT" \
-    --smiles "$SMILES_PATH" \
-    --output "$OUTPUT_NPY" \
-    --csv "$OUTPUT_CSV"
-else
-  python "$PYTHON_SCRIPT" \
-    --smiles "$SMILES_PATH" \
-    --output "$OUTPUT_NPY" \
-    --csv "$OUTPUT_CSV" \
-    --json "$OUTPUT_JSON"
-fi
+python "$PYTHON_SCRIPT" \
+  --smiles "$SMILES_PATH" \
+  --csv "$OUTPUT_CSV" \
+  --device "$DEVICE"
